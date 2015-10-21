@@ -1,0 +1,18 @@
+== partial "partials/head"
+
+body
+  == partial "partials/header"
+
+  .container.sections-wrapper
+    .row
+      .primary.col-md-8.col-sm-12.col-xs-12
+        section.main.section
+          .section-inner
+            = yield
+
+
+      == partial "partials/sidebar"
+
+
+  = partial "partials/footer"
+

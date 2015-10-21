@@ -1,0 +1,30 @@
+.secondary.col-md-4.col-sm-12.col-xs-12
+  aside.info.aside.section
+    .section-inner
+
+      ul.social.list-inline
+        li
+          a href="https://www.linkedin.com/in/bortevik"
+            i.fa.fa-linkedin
+        li.last-item
+          a href="https://github.com/bortevik"
+            i.fa.fa-github-alt
+
+  aside.blog.aside.section
+    .section-inner
+
+      h2 Recent posts
+      .content
+        .item
+          - blog.articles[0...10].each do |article|
+            h3.title = link_to article.title, article
+            span.date = article.date.strftime('%b %e, %Y')
+
+  aside.tags.aside.section
+    .section-inner
+
+      h2 Tags
+      ul
+        - blog.tags.each do |tag, articles|
+          li = link_to "#{tag} (#{articles.size})", tag_path(tag)
+

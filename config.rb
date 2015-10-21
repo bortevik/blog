@@ -1,3 +1,7 @@
+require 'redcarpet'
+require 'slim'
+Slim::Engine.disable_option_validator!
+
 ###
 # Blog settings
 ###
@@ -7,13 +11,14 @@
 activate :blog do |blog|
   # This will add a prefix to all links, template references and source paths
   # blog.prefix = "blog"
+  # blog.name = "blog"
 
-  # blog.permalink = "{year}/{month}/{day}/{title}.html"
+  blog.permalink = "{year}/{month}/{day}/{title}.html"
   # Matcher for blog source files
-  # blog.sources = "{year}-{month}-{day}-{title}.html"
-  # blog.taglink = "tags/{tag}.html"
-  # blog.layout = "layout"
-  # blog.summary_separator = /(READMORE)/
+  blog.sources = "blog/{year}/{year}-{month}-{day}-{title}.html"
+  blog.taglink = "tags/{tag}.html"
+  blog.layout = "layouts/post-layout"
+  blog.summary_separator = /(READMORE)/
   # blog.summary_length = 250
   # blog.year_link = "{year}.html"
   # blog.month_link = "{year}/{month}.html"
@@ -24,21 +29,20 @@ activate :blog do |blog|
   blog.calendar_template = "calendar.html"
 
   # Enable pagination
-  # blog.paginate = true
-  # blog.per_page = 10
-  # blog.page_link = "page/{num}"
+  blog.paginate = true
+  blog.per_page = 10
+  blog.page_link = "page/{num}"
 end
+
+set :markdown_engine, :redcarpet
+set :markdown, layout_engine: :slim,
+  fenced_code_blocks: true,
+  lax_html_blocks: true
+
+activate :directory_indexes
 
 page "/feed.xml", layout: false
 
-###
-# Compass
-###
-
-# Change Compass configuration
-# compass_config do |config|
-#   config.output_style = :compact
-# end
 
 ###
 # Page options, layouts, aliases and proxies
@@ -71,12 +75,15 @@ page "/feed.xml", layout: false
 # Reload the browser automatically whenever files change
 activate :livereload
 
-# Methods defined in the helpers block are available in templates
-# helpers do
-#   def some_helper
-#     "Helping"
-#   end
-# end
+helpers do
+  def site_url(protocol = 'http')
+    if development?
+      "#{protocol}://localhost:4567"
+    else
+      "#{protocol}://www.bortevik.com"
+    end
+  end
+end
 
 set :css_dir, 'stylesheets'
 
@@ -84,13 +91,14 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
-  # activate :minify_css
+  activate :minify_css
 
   # Minify Javascript on build
-  # activate :minify_javascript
+  activate :minify_javascript
 
   # Enable cache buster
   # activate :asset_hash
